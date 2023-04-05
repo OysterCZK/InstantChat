@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketServer {
     private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
 
-    // TODO: 2023/4/5 需要优化为线程安全 
     private static int onlineCount = 0;
 
     private static ConcurrentHashMap<String,WebSocketServer> webSocketServerMap = new ConcurrentHashMap<>();
@@ -53,14 +52,8 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(String message) throws IOException {
-        if("ping".equals(message)) {
-            sendInfo(sid, "pong");
-        }
-        if(message.contains(":")) {
-            String[] split = message.split(":");
-            sendInfo(split[0], "receivedMessage:"+sid+":"+split[1]);
-        }
+    public void onMessage(String jsonStr) throws IOException {
+        sendInfo(jsonStr);
     }
 
     @OnError
@@ -83,10 +76,6 @@ public class WebSocketServer {
         }
     }
 
-    public static void sendObject(Object obj) throws IOException {
-        sendInfo(JSONObject.toJSONString(obj));
-    }
-
     public static void sendInfo(String sid,String message) throws IOException {
         WebSocketServer socketServer = webSocketServerMap.get(sid);
         if(socketServer != null) {
@@ -94,12 +83,23 @@ public class WebSocketServer {
         }
     }
 
-    public static void sendInfo(String message) throws IOException {
+    /**
+     * 广播
+     * @param jsonStr
+     * @throws IOException
+     */
+    public static void sendInfo(String jsonStr) throws IOException {
         for(String sid : webSocketServerMap.keySet()) {
-            webSocketServerMap.get(sid).sendMessage(message);
+            webSocketServerMap.get(sid).sendMessage(jsonStr);
         }
     }
 
+    /**
+     * 指定对象发送
+     * @param userId
+     * @param message
+     * @throws IOException
+     */
     public static void sendInfoByUserId(Long userId,Object message) throws IOException {
         for(String sid : webSocketServerMap.keySet()) {
             String[] sids =  sid.split("id");
