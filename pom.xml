@@ -12,11 +12,11 @@
         <java.version>1.8</java.version>
         <skipTests>true</skipTests>
     </properties>
-    <groupId>com.instant.chat</groupId>
-    <artifactId>demo</artifactId>
+    <groupId>com.InstantVoiceChat</groupId>
+    <artifactId>InstantVoiceChat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <name>InstantVoiceChat</name>
+    <description>InstantVoiceChat</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
