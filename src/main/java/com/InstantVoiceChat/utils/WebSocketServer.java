@@ -32,11 +32,7 @@ public class WebSocketServer {
         webSocketServerMap.put(sid, this);
         addOnlineCount();
         log.info("有新窗口开始监听:"+sid+",当前在线人数为" + getOnlineCount());
-        try {
-            sendInfo("openSuccess:"+webSocketServerMap.keySet());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.info("openSuccess:"+webSocketServerMap.keySet());
     }
 
     @OnClose
@@ -44,11 +40,7 @@ public class WebSocketServer {
         webSocketServerMap.remove(sid);
         subOnlineCount();
         log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
-        try {
-            sendInfo("openSuccess:"+webSocketServerMap.keySet());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.info("openSuccess:"+webSocketServerMap.keySet());
     }
 
     @OnMessage
